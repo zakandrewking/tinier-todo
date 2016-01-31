@@ -18,11 +18,19 @@ function toArray (obj) {
   /** Convert object of objecs to array of objects, and add original keys
      with the 'id' attribute in the inner objects. */
   return Object.keys(obj).map(key => ({...obj[key], id: key }));
-};
+}
 
 export const empty_todo_list = { todos: {}, add: {} };
 
 export const TodoList = createClass({
+
+  model: function () {
+    return {
+      todos: objectOf(Todo)),
+      add: AddButton.bind('addButton')
+    });
+  },
+
   reducer: createReducer(empty_todo_list, {
     [ADD_TODO]: (state, action) => {
       return {

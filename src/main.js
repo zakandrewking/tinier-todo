@@ -1,23 +1,17 @@
 /** redux-my-d3 test */
 
-import { createClass, createReducer, objectOf, arrayOf } from 'tinier';
-import { TodoList } from './TodoList';
-import { Todo } from './Todo';
-import { Subtask } from './Subtask';
-import { AddButton } from './AddButton';
+import { createMiddleware, run } from 'tinier'
+import { TodoList } from './TodoList'
 
-import { applyMiddleware, createStore } from 'redux';
-import createLogger from 'redux-logger';
-const logger = createLogger();
-const createStoreWithMiddleware = applyMiddleware(logger)(createStore);
+import { applyMiddleware, createStore } from 'redux'
+import createLogger from 'redux-logger'
 
+const app = TodoList
 
-const app = TodoList('main', {
-  todos: objectOf(Todo('todos', {
-    subtasks: arrayOf(Subtask('subtasks'))
-  })),
-  add: AddButton('addButton')
-});
+const createStoreWithMiddleware = applyMiddleware(
+  createMiddleware(app),
+  createLogger()
+)(createStore)
 
 const api = app.run(document.body, {
   todos: {
@@ -28,6 +22,7 @@ const api = app.run(document.body, {
     }
   },
   add: {}
-}, createStoreWithMiddleware);
+}, createStoreWithMiddleware)
 
-api.addTodo({ text: 'new' });
+
+api.addTodo({ text: 'new' })
