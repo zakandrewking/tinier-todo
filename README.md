@@ -1,4 +1,35 @@
-tinier-todo
------------
+# Tinier • [TodoMVC](http://todomvc.com)
 
-Todo MVC with tinier
+> Simple views and bindings to redux, with d3.js in mind
+
+
+## Resources
+
+- [Website](https://github.com/zakandrewking/tinier)
+- [Documentation]()
+- [Used by]()
+- [Blog]()
+- [FAQ]()
+
+### Articles
+
+- [Interesting article]()
+
+### Support
+
+- [StackOverflow](httpstackoverflow.com/questions/tagged/tinier)
+- [Google Groups]()
+- [Twitter]()
+- [Google+]()
+
+*Let us [know](https://github.com/tastejs/todomvc/issues) if you discover anything worth sharing.*
+
+
+## Implementation
+
+How was the app created? Anything worth sharing about the process of creating the app? Any spec violations?
+
+
+## Credit
+
+Created by [Zachary King](http://github.com/zakandrewking)

@@ -1,10 +1,10 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: [ 'babel-polyfill', './js/app.js' ],
   output: {
     path: __dirname,
-    filename: 'bundle.js'
+    filename: 'dist/app.js'
   },
   resolve: { fallback: path.join(__dirname, "node_modules") },
   resolveLoader: { fallback: path.join(__dirname, "node_modules") },
