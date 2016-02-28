@@ -6,16 +6,22 @@ module.exports = {
     path: __dirname,
     filename: 'dist/app.js'
   },
-  resolve: { fallback: path.join(__dirname, "node_modules") },
-  resolveLoader: { fallback: path.join(__dirname, "node_modules") },
+  resolve: { fallback: path.join(__dirname, 'node_modules') },
+  resolveLoader: { fallback: path.join(__dirname, 'node_modules') },
   devtool: 'source-map',
   module: {
+    preLoaders: [
+      {
+        test: /\/tinier-dom\/lib\/.*\.js$/,
+        loader: 'source-map-loader',
+      }
+    ],
     loaders: [
       {
         loader: 'babel',
         test: /\.js$/,
         exclude: /node_modules/
       }
-    ]
-  }
-};
+    ],
+  },
+}
