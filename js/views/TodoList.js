@@ -1,9 +1,12 @@
 'use strict'
 
-import { createView, createReducer, arrayOf } from 'tinier'
+import { createView, createReducer, arrayOf, createActionCreators,
+         createAsyncActionCreators, } from 'tinier'
 import { h, render, binding } from 'tinier-dom'
 
 import Todo from './Todo'
+
+export const ADD_TODO = '@ADD_TODO'
 
 export const TodoList = createView({
   name: 'TodoList',
@@ -18,7 +21,22 @@ export const TodoList = createView({
     }
   },
 
-  update: function (el, state) {
+  getReducer: (model) => {
+    return createReducer({
+      [ADD_TODO]: (state, action) => {
+        return Object.assign({}, state, {
+          todos: [ Todo.init(action.title), ...state.todos ]
+        })
+      }
+    })
+  },
+
+  actionCreators: Object.assign(
+    createActionCreators([ 'addTodo' ])
+  ),
+
+  update: function (el, state, appState, actions) {
+    console.log('update')
     const todos = state.todos.map((todo, i) => {
       return <li>{ binding([ 'todos', i ]) }</li>
     })
