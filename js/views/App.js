@@ -1,14 +1,24 @@
 'use strict'
 
-import { h, render, binding } from 'tinier-dom'
 import { createView, createReducer } from 'tinier'
+import { h, render, binding } from 'tinier-dom'
+
+import TodoList from './TodoList'
 
 export const App = createView({
   name: 'App',
 
-  model: {},
+  model: {
+    todoList: TodoList,
+  },
 
-  create: function (state, appState, el) {
+  init: function () {
+    return {
+      todoList: TodoList.init()
+    }
+  },
+
+  update: function (el, state, appState) {
     return render(
       el,
       <section class="todoapp">
@@ -17,10 +27,7 @@ export const App = createView({
           <input class="new-todo" placeholder="What needs to be done?" autofocus />
         </header>
         <section class="main">
-          <input class="toggle-all" type="checkbox" />
-          <label for="toggle-all">Mark all as complete</label>
-          <ul class="todo-list">
-          </ul>
+          { binding([ 'todoList' ]) }
         </section>
         <footer class="footer">
           <span class="todo-count"><strong>0</strong> item left</span>
