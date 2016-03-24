@@ -1,12 +1,9 @@
 'use strict'
 
-import { createView, createReducer, createAsyncActionCreators, addressAction,
-         addressRelTo, } from 'tinier'
-import { h, render, binding } from 'tinier-dom'
+import { createView, findMethod } from 'tinier'
+import { h, render, bind } from 'tinier-dom'
 
 import { TodoList, ADD_TODO } from './TodoList'
-
-const KEY_UP = '@KEY_UP'
 
 export const App = createView({
   name: 'App',
@@ -21,20 +18,14 @@ export const App = createView({
     }
   },
 
-  actionCreators: createAsyncActionCreators({
-    [KEY_UP]: (event) => {
+  methods: {
+    inputKeyUp: (methods, state, appState, event, target) => {
       if (event.keyCode === 13)
-        return (actions, actionWithAddress, state) => {
-          // TODO clean this up. maybe like:
-          // findAction(ADD_TODO, [ 'todoList' ], null)('')
-          const add = actionWithAddress(addressAction(ADD_TODO, addressRelTo([ 'todoList' ])))
-          // work on debugging hints. lodash makes things very hard to follow
-          add('') // should error that action was not found
-        }
+        findMethod(ADD_TODO, [ 'todoList' ])(target.value.trim())
     }
-  }),
+  },
 
-  update: function (el, state, appState, actions) {
+  update: function (el, state, appState, methods) {
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
@@ -44,23 +35,17 @@ export const App = createView({
         <header class="header">
           <h1>todos</h1>
           <input class="new-todo" placeholder="What needs to be done?" autofocus
-                 onKeyUp={ actions[KEY_UP] } />
+                 onKeyUp={ methods.inputKeyUp } />
         </header>
         <section class="main" style={ mainFooterStyle } >
-          { binding([ 'todoList' ]) }
+          { bind([ 'todoList' ]) }
         </section>
         <footer class="footer" style={ mainFooterStyle }>
           <span class="todo-count"><strong>0</strong> item left</span>
           <ul class="filters">
-            <li>
-              <a class="selected" href="#/">All</a>
-            </li>
-            <li>
-              <a href="#/active">Active</a>
-            </li>
-            <li>
-              <a href="#/completed">Completed</a>
-            </li>
+            <li><a class="selected" href="#/">All</a></li>
+            <li><a href="#/active">Active</a></li>
+            <li><a href="#/completed">Completed</a></li>
           </ul>
           <button class="clear-completed">Clear completed</button>
         </footer>

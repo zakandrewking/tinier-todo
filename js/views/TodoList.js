@@ -1,12 +1,12 @@
 'use strict'
 
-import { createView, createReducer, arrayOf, createActionCreators,
-         createAsyncActionCreators, } from 'tinier'
-import { h, render, binding } from 'tinier-dom'
+import { createView, arrayOf, methodRef, } from 'tinier'
+import { h, render, bind } from 'tinier-dom'
 
 import Todo from './Todo'
 
 export const ADD_TODO = '@ADD_TODO'
+export const DESTROY = '@DESTROY'
 
 export const TodoList = createView({
   name: 'TodoList',
@@ -21,32 +21,30 @@ export const TodoList = createView({
     }
   },
 
-  getReducer: (model) => {
-    return createReducer({
-      [ADD_TODO]: (state, action) => {
-        return Object.assign({}, state, {
-          todos: [ Todo.init(action.title), ...state.todos ]
-        })
-      }
-    })
+  reducers: {
+    [ADD_TODO]: (state, label) => {
+      const destroyMethod = methodRef(DESTROY, [], [ state.todos.length ])
+      return { ...state, todos: [ ...state.todos, Todo.init(label, destroyMethod) ] }
+    },
+    [DESTROY]: (state, index) => {
+      const todos = state.todos.slice(0, index)
+              .concat(state.todos.slice(index + 1))
+              .map((todo, i) => Todo.init(todo.label, methodRef(DESTROY, [], [ i ])))
+      return { ...state, todos }
+    },
   },
 
-  actionCreators: Object.assign(
-    createActionCreators([ 'addTodo' ])
-  ),
-
-  update: function (el, state, appState, actions) {
+  update: function (el, state, appState, methods) {
     console.log('update')
     const todos = state.todos.map((todo, i) => {
-      return <li>{ binding([ 'todos', i ]) }</li>
+      return <li>{ bind([ 'todos', i ]) }</li>
     })
-    const res = render(
+    return render(
       el,
         <input class="toggle-all" type="checkbox" />,
         <label for="toggle-all">Mark all as complete</label>,
         <ul class="todo-list">{ todos }</ul>
     )
-    return res
   }
 })
 
