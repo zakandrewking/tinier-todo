@@ -1,49 +1,59 @@
-'use strict'
-
-import { createView, arrayOf, methodRef, } from 'tinier'
+import { createView,
+         arrayWith,
+       } from 'tinier'
 import { h, render, bind } from 'tinier-dom'
 
-import Todo from './Todo'
+import { Todo, DELETE } from './Todo'
+import ShowHide from './ShowHide'
 
+// public methods
 export const ADD_TODO = '@ADD_TODO'
-export const DESTROY = '@DESTROY'
 
 export const TodoList = createView({
   name: 'TodoList',
 
   model: {
-    todos: arrayOf(Todo)
+    todos: arrayWith(
+      Todo,
+      (methods, i) => ({ [DELETE]: () => { methods.deleteTodo(i) } })
+    ),
   },
 
-  init: function () {
-    return {
-      todos: [ Todo.init('go wild'), Todo.init('again!') ],
-    }
+  init: (labels=[]) => {
+    return Object.assign(
+      { todos: labels.map(Todo.init) },
+      ShowHide.init()
+    )
   },
 
-  reducers: {
-    [ADD_TODO]: (state, label) => {
-      const destroyMethod = methodRef(DESTROY, [], [ state.todos.length ])
-      return { ...state, todos: [ ...state.todos, Todo.init(label, destroyMethod) ] }
+  reducers: Object.assign(
+    {
+      [ADD_TODO]: (state, label='') => {
+        return Object.assign(state, {
+          todos: [ ...state.todos, Todo.init(label) ]
+        })
+      },
+      deleteTodo: (state, index) => {
+        return Object.assign(state, {
+          todos: [ ...state.todos.slice(0, index), ...state.todos.slice(index + 1) ]
+        })
+      },
     },
-    [DESTROY]: (state, index) => {
-      const todos = state.todos.slice(0, index)
-              .concat(state.todos.slice(index + 1))
-              .map((todo, i) => Todo.init(todo.label, methodRef(DESTROY, [], [ i ])))
-      return { ...state, todos }
-    },
-  },
+    ShowHide.reducers
+  ),
 
-  update: function (el, state, appState, methods) {
-    console.log('update')
+  render: function (el, state, methods) {
     const todos = state.todos.map((todo, i) => {
       return <li>{ bind([ 'todos', i ]) }</li>
     })
     return render(
       el,
-        <input class="toggle-all" type="checkbox" />,
-        <label for="toggle-all">Mark all as complete</label>,
+      <div style={ state.showHideStyle }>
+        <input class="toggle-all" type="checkbox" />
+        <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">{ todos }</ul>
+      </div>,
+      <span>I'm not hidden</span>
     )
   }
 })

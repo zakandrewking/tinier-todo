@@ -1,5 +1,3 @@
-'use strict'
-
 import { createMiddleware, run } from 'tinier'
 import { applyMiddleware, createStore } from 'redux'
 import createLogger from 'redux-logger'

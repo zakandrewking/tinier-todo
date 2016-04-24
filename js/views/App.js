@@ -1,36 +1,70 @@
-'use strict'
-
-import { createView, findMethod } from 'tinier'
-import { h, render, bind } from 'tinier-dom'
+import { createView, viewWith } from 'tinier'
+import { h, bind } from 'tinier-dom'
 
 import { TodoList, ADD_TODO } from './TodoList'
+import { Button, BUTTON_CLICK } from './Button'
+
+// public methods
+export ADD_TODO
+
+const randomString = () => { Math.random().toString(36) }
 
 export const App = createView({
   name: 'App',
 
   model: {
-    todoList: TodoList,
+    todoList: viewWith(
+      TodoList,
+      // signals in
+      null,
+      // signals out
+      (childMethods) => ({
+        [ADD_TODO]: childMethods[ADD_TODO],
+      })
+    ),
+    randomButton: viewWith(
+      Button,
+      // signals in
+      (methods) => ({
+        [BUTTON_CLICK]: () => { methods[ADD_TODO](randomString()) }
+      })
+    ),
+    addButton: viewWith(
+      Button,
+      // signals in
+      (methods) => ({ [BUTTON_CLICK]: methods[ADD_TODO] })
+    ),
   },
 
-  init: function () {
-    return {
-      todoList: TodoList.init()
-    }
+  // must define a method to pass an action through
+  signalMethods: [ ADD_TODO ],
+
+  init: () => ({
+    todoList: TodoList.init(),
+    randomButton: Button.init('Add random todo'),
+    addButton: Button.init('+'),
+  }),
+
+  actionCreators: {
+    'Just for fun': (msg) => {
+      return { type: 'Just for fun', msg }
+    },
   },
 
-  methods: {
-    inputKeyUp: (methods, state, appState, event, target) => {
+  // TODO add something async with a promise here
+  asyncMethods: {
+    inputKeyUp: ({ methods, state, appState, event, target, dispatch, actionCreators }) => {
       if (event.keyCode === 13)
-        findMethod(ADD_TODO, [ 'todoList' ])(target.value.trim())
-    }
+        methods.addTodo(target.value.trim())
+      dispatch(actionCreators['Just for fun'](' :) '))
+    },
   },
 
-  update: function (el, state, appState, methods) {
+  render: (state, methods, el) => {
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
-    return render(
-      el,
+    return (
       <section class="todoapp">
         <header class="header">
           <h1>todos</h1>
@@ -38,7 +72,7 @@ export const App = createView({
                  onKeyUp={ methods.inputKeyUp } />
         </header>
         <section class="main" style={ mainFooterStyle } >
-          { bind([ 'todoList' ]) }
+          { bind('todoList') }
         </section>
         <footer class="footer" style={ mainFooterStyle }>
           <span class="todo-count"><strong>0</strong> item left</span>
@@ -48,6 +82,7 @@ export const App = createView({
             <li><a href="#/completed">Completed</a></li>
           </ul>
           <button class="clear-completed">Clear completed</button>
+          { bind('addButton') }
         </footer>
       </section>,
       <footer class="info">

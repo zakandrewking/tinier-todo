@@ -1,42 +1,46 @@
-'use strict'
+import { createView, viewWith } from 'tinier'
+import { h, render, bind } from 'tinier-dom'
 
-import { createView, findMethod } from 'tinier'
-import { h, render, binding } from 'tinier-dom'
+import { Button, BUTTON_CLICK } from './Button'
+
+// public methods
+export const DELETE = '@DELETE'
 
 export const Todo = createView({
   name: 'Todo',
 
-  init: function (label, destroyRef, isCompleted=false) {
-    return { label, destroyRef, isCompleted }
+  model: {
+    // short-hand
+    deleteButton: viewWith(Button, { [BUTTON_CLICK]: [DELETE] }),
   },
+
+  signalMethods: [ DELETE ],
+
+  init: (label, isCompleted=false) => ({
+    label,
+    isCompleted,
+    deleteButton: Button.init('X'),
+  }),
 
   reducers: {
     markCompleted: (state, isCompleted) => {
-      return { ...state, isCompleted }
-    }
-  },
-
-  methods: {
-    inputMarkCompleted: (methods) => {
-      methods.markCompleted(this.checked)
-    },
-    clickedDestroy: (methods, state) => {
-      findMethod(state.destroyRef)
+      return Object.assign(state, { isCompleted })
     },
   },
 
-  shouldUpdate: function (oldState, newState) {
-    return (oldState.label       !== newState.label ||
-            oldState.isCompleted !== newState.isCompleted)
+  ayncMethods: {
+    onChangeCompleted: ({ methods, target }) => {
+      methods.markCompleted(target.checked)
+    },
   },
 
-  update: function (el, state, appState, methods) {
-    return render(
-      el,
+  render: (state, methods) => {
+    return (
       <div class="view">
-        <input class="toggle" type="checkbox" checked onchange={ methods.inputMarkCompleted }/>
+        <input class="toggle" type="checkbox" checked={ state.isCompleted }
+               onchange={ methods.onChangeCompleted }/>
         <label>{ state.label }</label>
-        <button class="destroy" onclick={ methods.clickedDestroy }></button>
+        { bind([ 'deleteButton' ]) }
       </div>
     )
   }
