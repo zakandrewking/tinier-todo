@@ -1,46 +1,38 @@
-import { createView,
-         arrayWith,
-       } from 'tinier'
-import { h, render, bind } from 'tinier-dom'
+import { createComponent, arrayWith } from 'tinier'
+import { h, bind } from 'tinier-dom'
 
-import { Todo, DELETE } from './Todo'
+import Todo from './Todo'
 import ShowHide from './ShowHide'
 
-// public methods
-export const ADD_TODO = '@ADD_TODO'
-
-export const TodoList = createView({
-  name: 'TodoList',
+export const TodoList = createComponent({
+  mixins: [ ShowHide ],
 
   model: {
     todos: arrayWith(
       Todo,
-      (methods, i) => ({ [DELETE]: () => { methods.deleteTodo(i) } })
+      null,
+      { delete: (methods, i) => () => methods.deleteTodo(i) }
     ),
   },
 
   init: (labels=[]) => {
-    return Object.assign(
-      { todos: labels.map(Todo.init) },
-      ShowHide.init()
-    )
+    return { todos: labels.map(Todo.init) }
   },
 
-  reducers: Object.assign(
-    {
-      [ADD_TODO]: (state, label='') => {
-        return Object.assign(state, {
-          todos: [ ...state.todos, Todo.init(label) ]
-        })
-      },
-      deleteTodo: (state, index) => {
-        return Object.assign(state, {
-          todos: [ ...state.todos.slice(0, index), ...state.todos.slice(index + 1) ]
-        })
-      },
+  reducers: {
+    addTodo: (state, label='') => {
+      return {
+          ...state,
+        todos: [ ...state.todos, Todo.init(label) ],
+      }
     },
-    ShowHide.reducers
-  ),
+    deleteTodo: (state, index) => {
+      return {
+          ...state,
+        todos: [ ...state.todos.slice(0, index), ...state.todos.slice(index + 1) ],
+      }
+    },
+  },
 
   render: function (el, state, methods) {
     const todos = state.todos.map((todo, i) => {

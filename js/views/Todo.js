@@ -1,20 +1,19 @@
-import { createView, viewWith } from 'tinier'
-import { h, render, bind } from 'tinier-dom'
+import { createComponent, componentWith } from 'tinier'
+import { h, bind } from 'tinier-dom'
 
-import { Button, BUTTON_CLICK } from './Button'
+import Button from './Button'
 
-// public methods
-export const DELETE = '@DELETE'
-
-export const Todo = createView({
-  name: 'Todo',
-
+export const Todo = createComponent({
   model: {
     // short-hand
-    deleteButton: viewWith(Button, { [BUTTON_CLICK]: [DELETE] }),
+    deleteButton: componentWith(
+      Button,
+      null,
+      { delete: (methods) => methods.delete }
+    )
   },
 
-  signalMethods: [ DELETE ],
+  hooks: [ 'delete' ],
 
   init: (label, isCompleted=false) => ({
     label,
@@ -24,7 +23,7 @@ export const Todo = createView({
 
   reducers: {
     markCompleted: (state, isCompleted) => {
-      return Object.assign(state, { isCompleted })
+      return { ...state, isCompleted }
     },
   },
 

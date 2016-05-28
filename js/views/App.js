@@ -1,43 +1,29 @@
-import { createView, viewWith } from 'tinier'
+import { createComponent, componentWith } from 'tinier'
 import { h, bind } from 'tinier-dom'
 
-import { TodoList, ADD_TODO } from './TodoList'
-import { Button, BUTTON_CLICK } from './Button'
+import TodoList from './TodoList'
+import Button from './Button'
 
-// public methods
-export ADD_TODO
+const randomString = () => Math.random().toString(36)
 
-const randomString = () => { Math.random().toString(36) }
-
-export const App = createView({
-  name: 'App',
-
+export const App = createComponent({
   model: {
-    todoList: viewWith(
+    todoList: componentWith(
       TodoList,
-      // signals in
+      { addTodo: (childMethods) => childMethods.addTodo },
+      null
+    ),
+    randomButton: componentWith(
+      Button,
       null,
-      // signals out
-      (childMethods) => ({
-        [ADD_TODO]: childMethods[ADD_TODO],
-      })
+      { buttonClick: (methods) => () => methods.addTodo(randomString()) }
     ),
-    randomButton: viewWith(
+    addButton: componentWith(
       Button,
-      // signals in
-      (methods) => ({
-        [BUTTON_CLICK]: () => { methods[ADD_TODO](randomString()) }
-      })
-    ),
-    addButton: viewWith(
-      Button,
-      // signals in
-      (methods) => ({ [BUTTON_CLICK]: methods[ADD_TODO] })
+      null,
+      { buttonClick: (methods) => () => methods.addTodo(methods.currentVal()) }
     ),
   },
-
-  // must define a method to pass an action through
-  signalMethods: [ ADD_TODO ],
 
   init: () => ({
     todoList: TodoList.init(),
@@ -94,5 +80,9 @@ export const App = createView({
     )
   },
 })
+
+if (App.displayName !== 'App') {
+  throw new Error('Missing displayName')
+}
 
 export { App as default }

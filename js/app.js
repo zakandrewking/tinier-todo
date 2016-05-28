@@ -10,3 +10,7 @@ const createStoreWithMiddleware = applyMiddleware(
 )(createStore)
 
 run(App, document.body, createStoreWithMiddleware)
+
+// or just:
+
+// run(App, document.body)

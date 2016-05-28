@@ -1,18 +1,13 @@
-import { createView } from 'tinier'
+import { createComponent } from 'tinier'
 import { h } from 'tinier-dom'
 
-// public methods
-export const BUTTON_CLICK = '@BUTTON_CLICK'
-
-export const Button = createView({
-  name: 'Button',
-
+export const Button = createComponent({
   init: (label) => ({ label }),
 
-  signalMethods: [ BUTTON_CLICK ],
+  hooks: [ 'buttonClick' ],
 
   render: (state, methods) => {
-    return <button onclick={ methods[BUTTON_CLICK] }>{ state.label }</button>
+    return <button onclick={ methods.buttonClick }>{ state.label }</button>
   },
 })
 
