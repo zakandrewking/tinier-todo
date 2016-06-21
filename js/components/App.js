@@ -1,4 +1,4 @@
-import { createComponent, componentWith } from 'tinier'
+import { createComponent } from 'tinier'
 import { h, bind } from 'tinier-dom'
 
 import TodoList from './TodoList'
@@ -7,22 +7,12 @@ import Button from './Button'
 const randomString = () => Math.random().toString(36)
 
 export const App = createComponent({
+  signals: [ 'addTodo' ],
+
   model: {
-    todoList: componentWith(
-      TodoList,
-      { addTodo: (childMethods) => childMethods.addTodo },
-      null
-    ),
-    randomButton: componentWith(
-      Button,
-      null,
-      { buttonClick: (methods) => () => methods.addTodo(randomString()) }
-    ),
-    addButton: componentWith(
-      Button,
-      null,
-      { buttonClick: (methods) => () => methods.addTodo(methods.currentVal()) }
-    ),
+    todoList: TodoList,
+    randomButton: Button,
+    addButton: Button,
   },
 
   init: () => ({
@@ -31,22 +21,29 @@ export const App = createComponent({
     addButton: Button.init('+'),
   }),
 
-  actionCreators: {
-    'Just for fun': (msg) => {
-      return { type: 'Just for fun', msg }
-    },
+  setup: ({ methods, signals, childSignals }) => {
+    // consider basing this on https://github.com/Hypercubed/mini-signals
+    signals.addTodo.add(
+      childSignals.todoList.addTodo.dispatch)
+
+    childSignals.randomButton.buttonClick.add(
+      () => signals.addTodo.dispatch(randomString()))
+
+    childSignals.addButton.buttonClick.add(
+      () => signals.addTodo.dispatch(methods.currentVal()))
   },
 
   // TODO add something async with a promise here
-  asyncMethods: {
-    inputKeyUp: ({ methods, state, appState, event, target, dispatch, actionCreators }) => {
-      if (event.keyCode === 13)
-        methods.addTodo(target.value.trim())
-      dispatch(actionCreators['Just for fun'](' :) '))
+  // TODO provide an alternative using signals in setup()
+  methods: {
+    inputKeyUp: ({ signals, event, target }) => {
+      if (event.keyCode === 13) {
+        signals.addTodo.dispatch(target.value.trim())
+      }
     },
   },
 
-  render: (state, methods, el) => {
+  render: ({ state, methods }) => { // also el, signals, methods
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }

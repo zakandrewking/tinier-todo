@@ -1,39 +1,35 @@
-import { createComponent, componentWith } from 'tinier'
+import { createComponent } from 'tinier'
 import { h, bind } from 'tinier-dom'
 
 import Button from './Button'
 
 export const Todo = createComponent({
+  signals: [ 'delete' ],
+
   model: {
-    // short-hand
-    deleteButton: componentWith(
-      Button,
-      null,
-      { delete: (methods) => methods.delete }
-    )
+    deleteButton: Button,
   },
 
-  hooks: [ 'delete' ],
-
-  init: (label, isCompleted=false) => ({
+  init: (label, isCompleted = false) => ({
     label,
     isCompleted,
     deleteButton: Button.init('X'),
   }),
 
   reducers: {
-    markCompleted: (state, isCompleted) => {
-      return { ...state, isCompleted }
+    markCompleted: (state, isCompleted) => ({
+      ...state,
+      isCompleted,
+    }),
+  },
+
+  methods: {
+    onChangeCompleted: ({ reducers, target }) => {
+      reducers.markCompleted(target.checked)
     },
   },
 
-  ayncMethods: {
-    onChangeCompleted: ({ methods, target }) => {
-      methods.markCompleted(target.checked)
-    },
-  },
-
-  render: (state, methods) => {
+  render: ({ state, methods }) => {
     return (
       <div class="view">
         <input class="toggle" type="checkbox" checked={ state.isCompleted }
