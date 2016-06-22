@@ -10,22 +10,22 @@ export const Todo = createComponent({
     deleteButton: Button,
   },
 
-  init: (label, isCompleted = false) => ({
+  init: ({ label, isCompleted = false }) => ({
     label,
     isCompleted,
-    deleteButton: Button.init('X'),
+    deleteButton: Button.init({ label: 'X' }),
   }),
 
   reducers: {
-    markCompleted: (state, isCompleted) => ({
+    markCompleted: ({ state, isCompleted }) => ({
       ...state,
       isCompleted,
     }),
   },
 
   methods: {
-    onChangeCompleted: ({ reducers, target }) => {
-      reducers.markCompleted(target.checked)
+    onChangeCompleted: ({ reducerFns, target }) => {
+      reducerFns.markCompleted(target.checked)
     },
   },
 

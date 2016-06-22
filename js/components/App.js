@@ -17,8 +17,9 @@ export const App = createComponent({
 
   init: () => ({
     todoList: TodoList.init(),
-    randomButton: Button.init('Add random todo'),
-    addButton: Button.init('+'),
+    randomButton: Button.init({ label: 'Add random todo' }),
+    addButton: Button.init({ label: '+' }),
+    value: '',
   }),
 
   setup: ({ methods, signals, childSignals }) => {
@@ -40,6 +41,9 @@ export const App = createComponent({
       if (event.keyCode === 13) {
         signals.addTodo.dispatch(target.value.trim())
       }
+    },
+    currentVal: ({ state }) => {
+      return state.value
     },
   },
 

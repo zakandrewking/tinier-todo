@@ -4,7 +4,7 @@ import { h } from 'tinier-dom'
 export const Button = createComponent({
   signals: [ 'buttonClick' ],
 
-  init: (label) => ({ label }),
+  init: ({ label }) => ({ label }),
 
   render: ({ state, signals }) => {
     return (

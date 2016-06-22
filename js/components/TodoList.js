@@ -11,25 +11,25 @@ export const TodoList = createComponent({
 
   model: {
     todos: arrayOf(Todo),
-  },
+ },
 
-  init: (labels = []) => ({
-    todos: labels.map(Todo.init),
+  init: ({ labels = [] }) => ({
+    todos: labels.map(label => Todo.init({ label })),
   }),
 
-  setup: ({ childSignals, reducers, signals }) => {
+  setup: ({ childSignals, reducer, signals }) => {
     childSignals.todos.addEach((i) => {
-      return () => reducers.deleteTodo(i)
+      return () => reducer.deleteTodo(i)
     })
-    signals.addTodo.add(reducers.addTodo)
+    signals.addTodo.add(reducer.addTodo)
   },
 
   reducers: {
-    addTodo: (state, label = '') => ({
+    addTodo: ({ state, label = '' }) => ({
       ...state,
-      todos: [ ...state.todos, Todo.init(label) ],
+      todos: [ ...state.todos, Todo.init({ label }) ],
     }),
-    deleteTodo: (state, index) => ({
+    deleteTodo: ({ state, index }) => ({
       ...state,
       todos: [ ...state.todos.slice(0, index), ...state.todos.slice(index + 1) ],
     }),

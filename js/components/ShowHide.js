@@ -2,24 +2,24 @@ import { createComponent } from 'tinier'
 
 const addStyle = (state) => {
   return {
-      ...state,
+    ...state,
     showHideStyle: { display: state.showHideHidden ? 'none' : 'block' }
   }
 }
 
 export const ShowHide = createComponent({
-  init: (showHideHidden = false) => {
+  init: ({ showHideHidden = false }) => {
     return addStyle({ showHideHidden })
   },
 
   reducers: {
-    show: (state) => {
+    show: ({ state }) => {
       return addStyle({ ...state, showHideHidden: false })
     },
-    hide: (state) => {
+    hide: ({ state }) => {
       return addStyle({ ...state, showHideHidden: true })
     },
-    toggleShowHide: (state) => {
+    toggleShowHide: ({ state }) => {
       return addStyle({ ...state, showHideHidden: !state.showHideHidden })
     },
   }
