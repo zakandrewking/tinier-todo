@@ -4,8 +4,6 @@ import { h, bind } from 'tinier-dom'
 import Button from './Button'
 
 export const Todo = createComponent({
-  signals: [ 'delete' ],
-
   model: {
     deleteButton: Button,
   },
@@ -16,6 +14,8 @@ export const Todo = createComponent({
     deleteButton: Button.init({ label: 'X' }),
   }),
 
+  signalNames: [ 'delete' ],
+
   reducers: {
     markCompleted: ({ state, isCompleted }) => ({
       ...state,
@@ -24,8 +24,8 @@ export const Todo = createComponent({
   },
 
   methods: {
-    onChangeCompleted: ({ reducerFns, target }) => {
-      reducerFns.markCompleted(target.checked)
+    onChangeCompleted: ({ reducer, target }) => {
+      reducer.markCompleted(target.checked)
     },
   },
 

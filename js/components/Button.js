@@ -2,9 +2,9 @@ import { createComponent } from 'tinier'
 import { h } from 'tinier-dom'
 
 export const Button = createComponent({
-  signals: [ 'buttonClick' ],
-
   init: ({ label }) => ({ label }),
+
+  signalNames: [ 'buttonClick' ],
 
   render: ({ state, signals }) => {
     return (

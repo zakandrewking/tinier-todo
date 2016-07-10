@@ -7,21 +7,21 @@ import ShowHide from './ShowHide'
 export const TodoList = createComponent({
   mixins: [ ShowHide ],
 
-  signals: [ 'addTodo' ],
-
   model: {
     todos: arrayOf(Todo),
- },
+  },
 
   init: ({ labels = [] }) => ({
     todos: labels.map(label => Todo.init({ label })),
   }),
 
-  setup: ({ childSignals, reducer, signals }) => {
-    childSignals.todos.addEach((i) => {
-      return () => reducer.deleteTodo(i)
+  signalNames: [ 'addTodo' ],
+
+  signalSetup: ({ childSignals, reducers, signals }) => {
+    childSignals.todos.delete.onEach((i) => {
+      return () => reducers.deleteTodo(i)
     })
-    signals.addTodo.add(reducer.addTodo)
+    signals.addTodo.on(reducers.addTodo)
   },
 
   reducers: {

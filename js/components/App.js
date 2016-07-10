@@ -7,8 +7,6 @@ import Button from './Button'
 const randomString = () => Math.random().toString(36)
 
 export const App = createComponent({
-  signals: [ 'addTodo' ],
-
   model: {
     todoList: TodoList,
     randomButton: Button,
@@ -22,16 +20,17 @@ export const App = createComponent({
     value: '',
   }),
 
-  setup: ({ methods, signals, childSignals }) => {
+  signalNames: [ 'addTodo' ],
+
+  signalSetup: ({ methods, signals, childSignals }) => {
     // consider basing this on https://github.com/Hypercubed/mini-signals
-    signals.addTodo.add(
-      childSignals.todoList.addTodo.dispatch)
+    signals.addTodo.on(childSignals.todoList.addTodo.call)
 
-    childSignals.randomButton.buttonClick.add(
-      () => signals.addTodo.dispatch(randomString()))
+    childSignals.randomButton.buttonClick.on(
+      () => signals.addTodo.call(randomString()))
 
-    childSignals.addButton.buttonClick.add(
-      () => signals.addTodo.dispatch(methods.currentVal()))
+    childSignals.addButton.buttonClick.on(
+      () => signals.addTodo.call(methods.currentVal()))
   },
 
   // TODO add something async with a promise here
@@ -47,7 +46,7 @@ export const App = createComponent({
     },
   },
 
-  render: ({ state, methods }) => { // also el, signals, methods
+  render: ({ state, methods }) => { // also el, signals
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
