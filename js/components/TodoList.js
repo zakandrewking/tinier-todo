@@ -5,14 +5,14 @@ import Todo from './Todo'
 import ShowHide from './ShowHide'
 
 export const TodoList = createComponent({
-  mixins: [ ShowHide ],
-
   model: {
     todos: arrayOf(Todo),
+    showHide: ShowHide,
   },
 
   init: ({ labels = [] }) => ({
     todos: labels.map(label => Todo.init({ label })),
+    showHide: ShowHide.init(),
   }),
 
   signalNames: [ 'addTodo' ],
@@ -41,7 +41,7 @@ export const TodoList = createComponent({
       return <li>{ bind([ 'todos', i ]) }</li>
     })
     return (
-      <div style={ state.showHideStyle }>
+      <div style={ state.showHide.style }>
         <input class="toggle-all" type="checkbox" />
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">{ todos }</ul>

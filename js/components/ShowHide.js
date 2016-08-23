@@ -1,26 +1,34 @@
 import { createComponent } from 'tinier'
 
-const addStyle = (state) => {
+const addStyle = state => {
   return {
     ...state,
-    showHideStyle: { display: state.showHideHidden ? 'none' : 'block' }
+    style: { display: state.hidden ? 'none' : 'block' }
   }
 }
 
 export const ShowHide = createComponent({
-  init: ({ showHideHidden = false }) => {
-    return addStyle({ showHideHidden })
+  signalNames: [ 'show', 'hide', 'toggle' ],
+
+  signalSetup: ({ signals, reducers }) => {
+    signals.show.on(reducers.show)
+    signals.hide.on(reducers.hide)
+    signals.toggle.on(reducers.toggle)
+  },
+
+  init: ({ hidden = false }) => {
+    return addStyle({ hidden })
   },
 
   reducers: {
     show: ({ state }) => {
-      return addStyle({ ...state, showHideHidden: false })
+      return addStyle({ ...state, hidden: false })
     },
     hide: ({ state }) => {
-      return addStyle({ ...state, showHideHidden: true })
+      return addStyle({ ...state, hidden: true })
     },
-    toggleShowHide: ({ state }) => {
-      return addStyle({ ...state, showHideHidden: !state.showHideHidden })
+    toggle: ({ state }) => {
+      return addStyle({ ...state, hidden: !state.hidden })
     },
   }
 })
