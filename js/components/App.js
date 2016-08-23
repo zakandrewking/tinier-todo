@@ -27,10 +27,12 @@ export const App = createComponent({
     signals.addTodo.on(childSignals.todoList.addTodo.call)
 
     childSignals.randomButton.buttonClick.on(
-      () => signals.addTodo.call(randomString()))
+      () => signals.addTodo.call({ label: randomString() })
+    )
 
     childSignals.addButton.buttonClick.on(
-      () => signals.addTodo.call(methods.currentVal()))
+      () => signals.addTodo.call({ label: methods.currentVal() })
+    )
   },
 
   // TODO add something async with a promise here
