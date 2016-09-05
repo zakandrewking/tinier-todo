@@ -1,5 +1,5 @@
 import { createComponent } from 'tinier'
-import { h, bind } from 'tinier-dom'
+import { h, bind, render } from 'tinier-dom'
 
 import TodoList from './TodoList'
 import Button from './Button'
@@ -7,6 +7,8 @@ import Button from './Button'
 const randomString = () => Math.random().toString(36)
 
 export const App = createComponent({
+  displayName: 'App',
+
   model: {
     todoList: TodoList,
     randomButton: Button,
@@ -48,11 +50,12 @@ export const App = createComponent({
     },
   },
 
-  render: ({ state, methods }) => { // also el, signals
+  render: ({ el, state, methods }) => { // also el, signals
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
-    return (
+    return render(
+      el,
       <section class="todoapp">
         <header class="header">
           <h1>todos</h1>
@@ -82,9 +85,5 @@ export const App = createComponent({
     )
   },
 })
-
-if (App.displayName !== 'App') {
-  throw new Error('Missing displayName')
-}
 
 export { App as default }

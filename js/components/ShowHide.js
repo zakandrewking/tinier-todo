@@ -16,8 +16,8 @@ export const ShowHide = createComponent({
     signals.toggle.on(reducers.toggle)
   },
 
-  init: ({ hidden = false }) => {
-    return addStyle({ hidden })
+  init: (arg = { hidden: false }) => {
+    return addStyle({ hidden: arg.hidden })
   },
 
   reducers: {
@@ -32,3 +32,5 @@ export const ShowHide = createComponent({
     },
   }
 })
+
+export { ShowHide as default }

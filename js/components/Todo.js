@@ -1,5 +1,5 @@
 import { createComponent } from 'tinier'
-import { h, bind } from 'tinier-dom'
+import { h, bind, render } from 'tinier-dom'
 
 import Button from './Button'
 
@@ -29,8 +29,8 @@ export const Todo = createComponent({
     },
   },
 
-  render: ({ state, methods }) => {
-    return (
+  render: ({ state, methods, el }) => {
+    return render(el,
       <div class="view">
         <input class="toggle" type="checkbox" checked={ state.isCompleted }
                onchange={ methods.onChangeCompleted }/>

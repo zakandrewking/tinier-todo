@@ -1,5 +1,5 @@
 import { createComponent, arrayOf } from 'tinier'
-import { h, bind } from 'tinier-dom'
+import { h, bind, render } from 'tinier-dom'
 
 import Todo from './Todo'
 import ShowHide from './ShowHide'
@@ -10,8 +10,8 @@ export const TodoList = createComponent({
     showHide: ShowHide,
   },
 
-  init: ({ labels = [] }) => ({
-    todos: labels.map(label => Todo.init({ label })),
+  init: (arg = { labels: [] }) => ({
+    todos: arg.labels.map(label => Todo.init({ label })),
     showHide: ShowHide.init(),
   }),
 
@@ -36,11 +36,11 @@ export const TodoList = createComponent({
     }),
   },
 
-  render: ({ state }) => {
+  render: ({ state, el }) => {
     const todos = state.todos.map((todo, i) => {
       return <li>{ bind([ 'todos', i ]) }</li>
     })
-    return (
+    return render(el,
       <div style={ state.showHide.style }>
         <input class="toggle-all" type="checkbox" />
         <label for="toggle-all">Mark all as complete</label>
