@@ -8,7 +8,7 @@ export const Button = createComponent({
 
   render: ({ state, signals, el }) => {
     return render(el,
-      <button onclick={ signals.buttonClick.dispatch }>
+      <button onclick={ signals.buttonClick.call }>
         { state.label }
       </button>
     )

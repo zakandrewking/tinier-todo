@@ -35,7 +35,7 @@ export const Todo = createComponent({
         <input class="toggle" type="checkbox" checked={ state.isCompleted }
                onchange={ methods.onChangeCompleted }/>
         <label>{ state.label }</label>
-        { bind([ 'deleteButton' ]) }
+        <div>{ bind('deleteButton') }</div>
       </div>
     )
   }

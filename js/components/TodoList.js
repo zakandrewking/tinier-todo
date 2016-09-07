@@ -5,6 +5,8 @@ import Todo from './Todo'
 import ShowHide from './ShowHide'
 
 export const TodoList = createComponent({
+  displayName: 'TodoList',
+
   model: {
     todos: arrayOf(Todo),
     showHide: ShowHide,

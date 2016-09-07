@@ -42,7 +42,7 @@ export const App = createComponent({
   methods: {
     inputKeyUp: ({ signals, event, target }) => {
       if (event.keyCode === 13) {
-        signals.addTodo.dispatch(target.value.trim())
+        signals.addTodo.call(target.value.trim())
       }
     },
     currentVal: ({ state }) => {
@@ -73,7 +73,12 @@ export const App = createComponent({
             <li><a href="#/completed">Completed</a></li>
           </ul>
           <button class="clear-completed">Clear completed</button>
-          { bind('addButton') }
+          <div>
+            { bind('addButton') }
+          </div>
+          <div>
+            { bind('randomButton') }
+          </div>
         </footer>
       </section>,
       <footer class="info">
