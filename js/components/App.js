@@ -42,7 +42,7 @@ export const App = createComponent({
   methods: {
     inputKeyUp: ({ signals, event, target }) => {
       if (event.keyCode === 13) {
-        signals.addTodo.call(target.value.trim())
+        signals.addTodo.call({ label: target.value.trim() })
       }
     },
     currentVal: ({ state }) => {
@@ -62,7 +62,7 @@ export const App = createComponent({
           <input class="new-todo" placeholder="What needs to be done?" autofocus
                  onKeyUp={ methods.inputKeyUp } />
         </header>
-        <section class="main" style={ mainFooterStyle } >
+        <section class="main" >
           { bind('todoList') }
         </section>
         <footer class="footer" style={ mainFooterStyle }>

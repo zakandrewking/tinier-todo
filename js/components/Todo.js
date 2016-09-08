@@ -4,6 +4,8 @@ import { h, bind, render } from 'tinier-dom'
 import Button from './Button'
 
 export const Todo = createComponent({
+  displayName: 'Todo',
+
   model: {
     deleteButton: Button,
   },
@@ -11,10 +13,14 @@ export const Todo = createComponent({
   init: ({ label, isCompleted = false }) => ({
     label,
     isCompleted,
-    deleteButton: Button.init({ label: 'X' }),
+    deleteButton: Button.init({ className: 'destroy' }),
   }),
 
   signalNames: [ 'delete' ],
+
+  signalSetup: ({ childSignals, signals }) => {
+    childSignals.deleteButton.buttonClick.on(signals.delete.call)
+  },
 
   reducers: {
     markCompleted: ({ state, isCompleted }) => ({
@@ -24,8 +30,8 @@ export const Todo = createComponent({
   },
 
   methods: {
-    onChangeCompleted: ({ reducer, target }) => {
-      reducer.markCompleted(target.checked)
+    onChangeCompleted: ({ reducers, target }) => {
+      reducers.markCompleted(target.checked)
     },
   },
 

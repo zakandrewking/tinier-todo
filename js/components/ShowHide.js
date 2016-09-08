@@ -8,6 +8,8 @@ const addStyle = state => {
 }
 
 export const ShowHide = createComponent({
+  displayName: 'ShowHide',
+
   signalNames: [ 'show', 'hide', 'toggle' ],
 
   signalSetup: ({ signals, reducers }) => {

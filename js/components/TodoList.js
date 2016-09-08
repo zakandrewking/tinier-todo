@@ -21,7 +21,7 @@ export const TodoList = createComponent({
 
   signalSetup: ({ childSignals, reducers, signals }) => {
     childSignals.todos.delete.onEach(({ i }) => {
-      () => reducers.deleteTodo({ index: i })
+      reducers.deleteTodo({ index: i })
     })
 
     signals.addTodo.on(reducers.addTodo)
