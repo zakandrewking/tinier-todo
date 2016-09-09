@@ -17,14 +17,18 @@ export const TodoList = createComponent({
     showHide: ShowHide.init(),
   }),
 
-  signalNames: [ 'addTodo' ],
+  signalNames: [ 'addTodo', 'updatedTodoCount' ],
 
   signalSetup: ({ childSignals, reducers, signals }) => {
     childSignals.todos.delete.onEach(({ i }) => {
       reducers.deleteTodo({ index: i })
+      signals.updatedTodoCount.call({})
     })
 
-    signals.addTodo.on(reducers.addTodo)
+    signals.addTodo.on((arg) => {
+      reducers.addTodo(arg)
+      signals.updatedTodoCount.call({})
+    })
   },
 
   reducers: {
@@ -47,8 +51,7 @@ export const TodoList = createComponent({
         <input class="toggle-all" type="checkbox" />
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">{ todos }</ul>
-      </div>,
-      <span>I'm not hidden</span>
+      </div>
     )
   }
 })

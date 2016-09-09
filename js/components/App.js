@@ -1,4 +1,4 @@
-import { createComponent } from 'tinier'
+import { createComponent, forceRenderReducer, } from 'tinier'
 import { h, bind, render } from 'tinier-dom'
 
 import TodoList from './TodoList'
@@ -24,9 +24,10 @@ export const App = createComponent({
 
   signalNames: [ 'addTodo' ],
 
-  signalSetup: ({ methods, signals, childSignals }) => {
-    // consider basing this on https://github.com/Hypercubed/mini-signals
+  signalSetup: ({ signals, childSignals, methods, reducers }) => {
     signals.addTodo.on(childSignals.todoList.addTodo.call)
+
+    childSignals.todoList.updatedTodoCount.on(reducers.forceRender)
 
     childSignals.randomButton.buttonClick.on(
       () => signals.addTodo.call({ label: randomString() })
@@ -38,16 +39,23 @@ export const App = createComponent({
   },
 
   // TODO add something async with a promise here
-  // TODO provide an alternative using signals in setup()
   methods: {
     inputKeyUp: ({ signals, event, target }) => {
       if (event.keyCode === 13) {
-        signals.addTodo.call({ label: target.value.trim() })
+        const label = target.value.trim()
+        if (label !== '') {
+          signals.addTodo.call({ label })
+          target.value = ''
+        }
       }
     },
     currentVal: ({ state }) => {
       return state.value
     },
+  },
+
+  reducers: {
+    forceRender: forceRenderReducer,
   },
 
   render: ({ el, state, methods }) => { // also el, signals
