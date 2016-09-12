@@ -37,7 +37,7 @@ export const Todo = createComponent({
     },
     inputKeyUp: ({ reducers, target, event }) => {
       if (event.keyCode === 13) {
-        reducers.updateLabel({ label: target.value })
+        reducers.updateLabel({ label: target.value.trim() })
         reducers.stopEditing()
       }
     }
@@ -46,6 +46,7 @@ export const Todo = createComponent({
   render: ({ state, methods, reducers, el }) => {
     const labelStyle = { display: !state.isEditing ? 'block' : 'none' }
     const inputStyle = { display:  state.isEditing ? 'block' : 'none' }
+    const focusFn = state.isEditing ? el => el.focus() : null
     return render(el,
       <div class="view">
         <input class="toggle" type="checkbox" checked={ state.isCompleted }
@@ -54,7 +55,7 @@ export const Todo = createComponent({
           { state.label }
         </label>
         <input class="edit" value={ state.label } onKeyUp={ methods.inputKeyUp }
-                  style={ inputStyle } />
+               style={ inputStyle } then={ focusFn } />
         <div>{ bind('deleteButton') }</div>
       </div>
     )

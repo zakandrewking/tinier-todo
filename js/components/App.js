@@ -51,6 +51,7 @@ export const App = createComponent({
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
     const left = state.todoList.todos.filter(t => !t.isCompleted).length
+    const s = left > 1 ? 's' : ''
     const showClearButton = left !== state.todoList.todos.length
     const clearButton = (<button class="clear-completed"
                                  onclick={ signals.clearCompleted.call }>
@@ -68,7 +69,9 @@ export const App = createComponent({
           { bind('todoList') }
         </section>
         <footer class="footer" style={ mainFooterStyle }>
-          <span class="todo-count"><strong>{ left }</strong> item left</span>
+          <span class="todo-count">
+            <strong>{ left }</strong> item{ s } left
+          </span>
           <ul class="filters">
             <li><a class="selected" href="#/">All</a></li>
             <li><a href="#/active">Active</a></li>

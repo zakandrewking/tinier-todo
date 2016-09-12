@@ -1,7 +1,14 @@
 # Tinier • [TodoMVC](http://todomvc.com)
 
-> Simple views and bindings to redux, with d3.js in mind
+> Tinier is a library for building tiny reactive components in
+> JavaScript. Designed with D3.js in mind.
 
+## TODO
+
+https://github.com/tastejs/todomvc/blob/master/app-spec.md
+
+- Add routing
+- Add local storage
 
 ## Resources
 
@@ -24,11 +31,10 @@
 
 *Let us [know](https://github.com/tastejs/todomvc/issues) if you discover anything worth sharing.*
 
-
 ## Implementation
 
-How was the app created? Anything worth sharing about the process of creating the app? Any spec violations?
-
+How was the app created? Anything worth sharing about the process of creating
+the app? Any spec violations?
 
 ## Credit
 

@@ -2,7 +2,7 @@
   "name": "tinier-todo",
   "version": "0.1.0",
   "private": true,
-  "description": "Todo MVC with tinier",
+  "description": "Todo MVC with Tinier",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zakandrewking/tinier-todo.git"
