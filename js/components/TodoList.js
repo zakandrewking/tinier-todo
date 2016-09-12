@@ -17,7 +17,7 @@ export const TodoList = createComponent({
     showHide: ShowHide.init(),
   }),
 
-  signalNames: [ 'addTodo', 'updatedTodoCount' ],
+  signalNames: [ 'addTodo', 'updatedTodoCount', 'clearCompleted' ],
 
   signalSetup: ({ childSignals, reducers, signals }) => {
     childSignals.todos.delete.onEach(({ i }) => {
@@ -27,6 +27,13 @@ export const TodoList = createComponent({
 
     signals.addTodo.on((arg) => {
       reducers.addTodo(arg)
+      signals.updatedTodoCount.call({})
+    })
+
+    childSignals.todos.changedCompleted.onEach(signals.updatedTodoCount.call)
+
+    signals.clearCompleted.on(() => {
+      reducers.clearCompleted({})
       signals.updatedTodoCount.call({})
     })
   },
@@ -40,6 +47,10 @@ export const TodoList = createComponent({
       ...state,
       todos: [ ...state.todos.slice(0, index), ...state.todos.slice(index + 1) ],
     }),
+    clearCompleted: ({ state }) => ({
+      ...state,
+      todos: state.todos.filter(t => !t.isCompleted),
+    })
   },
 
   render: ({ state, el }) => {

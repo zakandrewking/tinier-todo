@@ -4,38 +4,26 @@ import { h, bind, render } from 'tinier-dom'
 import TodoList from './TodoList'
 import Button from './Button'
 
-const randomString = () => Math.random().toString(36)
-
 export const App = createComponent({
   displayName: 'App',
 
   model: {
     todoList: TodoList,
-    randomButton: Button,
-    addButton: Button,
   },
 
   init: () => ({
     todoList: TodoList.init(),
-    randomButton: Button.init({ label: 'Add random todo' }),
-    addButton: Button.init({ label: '+' }),
     value: '',
   }),
 
-  signalNames: [ 'addTodo' ],
+  signalNames: [ 'addTodo', 'clearCompleted' ],
 
   signalSetup: ({ signals, childSignals, methods, reducers }) => {
     signals.addTodo.on(childSignals.todoList.addTodo.call)
 
     childSignals.todoList.updatedTodoCount.on(reducers.forceRender)
 
-    childSignals.randomButton.buttonClick.on(
-      () => signals.addTodo.call({ label: randomString() })
-    )
-
-    childSignals.addButton.buttonClick.on(
-      () => signals.addTodo.call({ label: methods.currentVal() })
-    )
+    signals.clearCompleted.on(childSignals.todoList.clearCompleted.call)
   },
 
   // TODO add something async with a promise here
@@ -58,10 +46,16 @@ export const App = createComponent({
     forceRender: forceRenderReducer,
   },
 
-  render: ({ el, state, methods }) => { // also el, signals
+  render: ({ el, state, methods, signals }) => {
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
     }
+    const left = state.todoList.todos.filter(t => !t.isCompleted).length
+    const showClearButton = left !== state.todoList.todos.length
+    const clearButton = (<button class="clear-completed"
+                                 onclick={ signals.clearCompleted.call }>
+                         Clear completed
+                         </button>)
     return render(
       el,
       <section class="todoapp">
@@ -74,19 +68,13 @@ export const App = createComponent({
           { bind('todoList') }
         </section>
         <footer class="footer" style={ mainFooterStyle }>
-          <span class="todo-count"><strong>0</strong> item left</span>
+          <span class="todo-count"><strong>{ left }</strong> item left</span>
           <ul class="filters">
             <li><a class="selected" href="#/">All</a></li>
             <li><a href="#/active">Active</a></li>
             <li><a href="#/completed">Completed</a></li>
           </ul>
-          <button class="clear-completed">Clear completed</button>
-          <div>
-            { bind('addButton') }
-          </div>
-          <div>
-            { bind('randomButton') }
-          </div>
+          { showClearButton ? clearButton : null }
         </footer>
       </section>,
       <footer class="info">
