@@ -4,13 +4,13 @@ import { h, render } from 'tinier-dom'
 export const Button = createComponent({
   displayName: 'Button',
 
-  init: ({ label = '', className = '' }) => ({ label, className }),
+  init: ({ label = '', classStr = '' }) => ({ label, classStr }),
 
   signalNames: [ 'buttonClick' ],
 
   render: ({ state, signals, el }) => {
     return render(el,
-      <button onclick={ signals.buttonClick.call } className={ state.className }>
+      <button onclick={ signals.buttonClick.call } class={ state.classStr }>
         { state.label }
       </button>
     )

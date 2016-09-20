@@ -14,7 +14,7 @@ export const Todo = createComponent({
     label,
     isCompleted,
     isEditing,
-    deleteButton: Button.init({ className: 'destroy' }),
+    deleteButton: Button.init({ classStr: 'destroy' }),
   }),
 
   signalNames: [ 'delete', 'changedCompleted' ],
