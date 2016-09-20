@@ -1,4 +1,4 @@
-import { createComponent, forceRenderReducer, } from 'tinier'
+import { createComponent, } from 'tinier'
 import { h, bind, render } from 'tinier-dom'
 
 import TodoList from './TodoList'
@@ -21,8 +21,6 @@ export const App = createComponent({
   signalSetup: ({ signals, childSignals, methods, reducers }) => {
     signals.addTodo.on(childSignals.todoList.addTodo.call)
 
-    childSignals.todoList.updatedTodoCount.on(reducers.forceRender)
-
     signals.clearCompleted.on(childSignals.todoList.clearCompleted.call)
   },
 
@@ -40,10 +38,6 @@ export const App = createComponent({
     currentVal: ({ state }) => {
       return state.value
     },
-  },
-
-  reducers: {
-    forceRender: forceRenderReducer,
   },
 
   render: ({ el, state, methods, signals }) => {

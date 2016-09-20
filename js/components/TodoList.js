@@ -1,4 +1,4 @@
-import { createComponent, arrayOf, forceRenderReducer } from 'tinier'
+import { createComponent, arrayOf, } from 'tinier'
 import { h, bind, render } from 'tinier-dom'
 
 import Todo from './Todo'
@@ -38,7 +38,6 @@ export const TodoList = createComponent({
 
     childSignals.todos.changedCompleted.onEach(() => {
       signals.updatedTodoCount.call({})
-      reducers.forceRender()
     })
   },
 
@@ -62,7 +61,6 @@ export const TodoList = createComponent({
         todos: state.todos.map(t => ({ ...t, isCompleted })),
       }
     },
-    forceRender: forceRenderReducer,
   },
 
   render: ({ state, el, reducers }) => {
