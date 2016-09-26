@@ -12,7 +12,7 @@ module.exports = {
   module: {
     preLoaders: [
       {
-        test: /\/tinier\/lib\/.*\.js$/,
+        test: /\/tinier.*\/lib\/.*\.js$/,
         loader: 'source-map-loader',
       }
     ],

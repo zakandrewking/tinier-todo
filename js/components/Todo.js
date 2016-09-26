@@ -48,16 +48,14 @@ export const Todo = createComponent({
     const inputStyle = { display:  state.isEditing ? 'block' : 'none' }
     const focusFn = state.isEditing ? el => el.focus() : null
     return render(el,
-      <div class="view">
-        <input class="toggle" type="checkbox" checked={ state.isCompleted }
-                  onchange={ methods.changeCompleted } />
-        <label ondblclick={ reducers.startEditing } style={ labelStyle } >
+      <input class="toggle" type="checkbox" checked={ state.isCompleted }
+             onchange={ methods.changeCompleted } />,
+      <label ondblclick={ reducers.startEditing } style={ labelStyle } >
           { state.label }
-        </label>
-        <input class="edit" value={ state.label } onKeyUp={ methods.inputKeyUp }
-               style={ inputStyle } then={ focusFn } />
-        <div>{ bind('deleteButton') }</div>
-      </div>
+      </label>,
+      <input class="edit" value={ state.label } onKeyUp={ methods.inputKeyUp }
+             style={ inputStyle } then={ focusFn } />,
+      <div>{ bind('deleteButton') }</div>
     )
   }
 })
