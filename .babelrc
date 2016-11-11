@@ -2,6 +2,6 @@
   presets: [ [ "es2015", { loose: true } ], "react"],
   plugins: [
     "transform-object-rest-spread",
-    [ "transform-react-jsx", { pragma: "h" } ]
+    [ "transform-react-jsx", { pragma: "tinier.createElement" } ]
   ]
 }

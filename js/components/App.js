@@ -1,10 +1,9 @@
-import { createComponent, } from 'tinier'
-import { h, bind, render } from 'tinier-dom'
+import tinier from 'tinier'
 
 import TodoList from './TodoList'
 import Button from './Button'
 
-export const App = createComponent({
+export const App = tinier.createComponent({
   displayName: 'App',
 
   model: {
@@ -51,7 +50,7 @@ export const App = createComponent({
                                  onclick={ signals.clearCompleted.call }>
                          Clear completed
                          </button>)
-    return render(
+    return tinier.render(
       el,
       <section class="todoapp">
         <header class="header">
@@ -60,7 +59,7 @@ export const App = createComponent({
                  onKeyUp={ methods.inputKeyUp } />
         </header>
         <section class="main" >
-          { bind('todoList') }
+          { tinier.bind('todoList') }
         </section>
         <footer class="footer" style={ mainFooterStyle }>
           <span class="todo-count">

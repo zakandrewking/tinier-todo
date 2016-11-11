@@ -1,5 +1,4 @@
-import { createComponent, arrayOf, } from 'tinier'
-import { h, bind, render } from 'tinier-dom'
+import tinier from 'tinier'
 
 import Todo from './Todo'
 import ShowHide from './ShowHide'
@@ -8,11 +7,11 @@ function all (ar) {
   return ar.reduce((accum, val) => accum && val, true)
 }
 
-export const TodoList = createComponent({
+export const TodoList = tinier.createComponent({
   displayName: 'TodoList',
 
   model: {
-    todos: arrayOf(Todo),
+    todos: tinier.arrayOf(Todo),
     showHide: ShowHide,
   },
 
@@ -65,10 +64,10 @@ export const TodoList = createComponent({
 
   render: ({ state, el, reducers }) => {
     const todos = state.todos.map((todo, i) => {
-      return <li>{ bind([ 'todos', i ]) }</li>
+      return <li>{ tinier.bind([ 'todos', i ]) }</li>
     })
     const allChecked = all(state.todos.map(t => t.isCompleted))
-    return render(el,
+    return tinier.render(el,
       <div style={ state.showHide.style }>
       <input class="toggle-all" type="checkbox"
              checked={ allChecked } onclick={ reducers.toggleAll }/>

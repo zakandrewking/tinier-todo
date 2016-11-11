@@ -1,7 +1,6 @@
-import { createComponent } from 'tinier'
-import { h, render } from 'tinier-dom'
+import tinier from 'tinier'
 
-export const Button = createComponent({
+export const Button = tinier.createComponent({
   displayName: 'Button',
 
   init: ({ label = '', classStr = '' }) => ({ label, classStr }),
@@ -9,7 +8,7 @@ export const Button = createComponent({
   signalNames: [ 'buttonClick' ],
 
   render: ({ state, signals, el }) => {
-    return render(el,
+    return tinier.render(el,
       <button onclick={ signals.buttonClick.call } class={ state.classStr }>
         { state.label }
       </button>

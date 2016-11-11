@@ -1,4 +1,4 @@
-import { createComponent } from 'tinier'
+import tinier from 'tinier'
 
 const addStyle = state => {
   return {
@@ -7,7 +7,7 @@ const addStyle = state => {
   }
 }
 
-export const ShowHide = createComponent({
+export const ShowHide = tinier.createComponent({
   displayName: 'ShowHide',
 
   signalNames: [ 'show', 'hide', 'toggle' ],

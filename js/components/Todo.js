@@ -1,9 +1,8 @@
-import { createComponent } from 'tinier'
-import { h, bind, render } from 'tinier-dom'
+import tinier from 'tinier'
 
 import Button from './Button'
 
-export const Todo = createComponent({
+export const Todo = tinier.createComponent({
   displayName: 'Todo',
 
   model: {
@@ -47,7 +46,7 @@ export const Todo = createComponent({
     const labelStyle = { display: !state.isEditing ? 'block' : 'none' }
     const inputStyle = { display:  state.isEditing ? 'block' : 'none' }
     const focusFn = state.isEditing ? el => el.focus() : null
-    return render(el,
+    return tinier.render(el,
       <input class="toggle" type="checkbox" checked={ state.isCompleted }
              onchange={ methods.changeCompleted } />,
       <label ondblclick={ reducers.startEditing } style={ labelStyle } >
@@ -55,7 +54,7 @@ export const Todo = createComponent({
       </label>,
       <input class="edit" value={ state.label } onKeyUp={ methods.inputKeyUp }
              style={ inputStyle } then={ focusFn } />,
-      <div>{ bind('deleteButton') }</div>
+      <div>{ tinier.bind('deleteButton') }</div>
     )
   }
 })
