@@ -15,30 +15,10 @@ export const TodoList = tinier.createComponent({
     showHide: ShowHide,
   },
 
-  init: (arg = { labels: [] }) => ({
-    todos: arg.labels.map(label => Todo.init({ label })),
+  init: ({ labels = [] }) => ({
+    todos: labels.map(label => Todo.init({ label })),
     showHide: ShowHide.init(),
   }),
-
-  signalNames: [ 'addTodo', 'updatedTodoCount', 'clearCompleted' ],
-
-  signalSetup: ({ childSignals, reducers, signals }) => {
-    childSignals.todos.delete.onEach(({ i }) => {
-      reducers.deleteTodo({ index: i })
-    })
-
-    signals.addTodo.on((arg) => {
-      reducers.addTodo(arg)
-    })
-
-    signals.clearCompleted.on(() => {
-      reducers.clearCompleted({})
-    })
-
-    childSignals.todos.changedCompleted.onEach(() => {
-      signals.updatedTodoCount.call({})
-    })
-  },
 
   reducers: {
     addTodo: ({ state, label = '' }) => ({
@@ -60,6 +40,26 @@ export const TodoList = tinier.createComponent({
         todos: state.todos.map(t => ({ ...t, isCompleted })),
       }
     },
+  },
+
+  signalNames: [ 'addTodo', 'updatedTodoCount', 'clearCompleted' ],
+
+  signalSetup: ({ childSignals, reducers, signals }) => {
+    childSignals.todos.delete.onEach(({ i }) => {
+      reducers.deleteTodo({ index: i })
+    })
+
+    signals.addTodo.on((arg) => {
+      reducers.addTodo(arg)
+    })
+
+    signals.clearCompleted.on(() => {
+      reducers.clearCompleted({})
+    })
+
+    childSignals.todos.changedCompleted.onEach(() => {
+      signals.updatedTodoCount.call({})
+    })
   },
 
   render: ({ state, el, reducers }) => {

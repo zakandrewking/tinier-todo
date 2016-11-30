@@ -8,19 +8,29 @@ export const App = tinier.createComponent({
 
   model: {
     todoList: TodoList,
+    clearButton: Button,
   },
 
   init: () => ({
     todoList: TodoList.init(),
+    clearButton: Button.init({
+      classStr: 'clear-completed', label: 'Clear completed',
+    }),
     value: '',
   }),
 
-  signalNames: [ 'addTodo', 'clearCompleted' ],
+  signalNames: [ 'addTodo' ],
 
   signalSetup: ({ signals, childSignals, methods, reducers }) => {
-    signals.addTodo.on(childSignals.todoList.addTodo.call)
+    // add todo
+    signals.addTodo.on(
+      childSignals.todoList.addTodo.call
+    )
 
-    signals.clearCompleted.on(childSignals.todoList.clearCompleted.call)
+    // clear todos
+    childSignals.clearButton.buttonClick.on(
+      childSignals.todoList.clearCompleted.call
+    )
   },
 
   // TODO add something async with a promise here
@@ -46,10 +56,7 @@ export const App = tinier.createComponent({
     const left = state.todoList.todos.filter(t => !t.isCompleted).length
     const s = left > 1 ? 's' : ''
     const showClearButton = left !== state.todoList.todos.length
-    const clearButton = (<button class="clear-completed"
-                                 onclick={ signals.clearCompleted.call }>
-                         Clear completed
-                         </button>)
+
     return tinier.render(
       el,
       <section class="todoapp">
@@ -70,7 +77,9 @@ export const App = tinier.createComponent({
             <li><a href="#/active">Active</a></li>
             <li><a href="#/completed">Completed</a></li>
           </ul>
-          { showClearButton ? clearButton : null }
+          <div style={{ display: showClearButton ? 'block': 'none'}}>
+            { tinier.bind('clearButton') }
+          </div>
         </footer>
       </section>,
       <footer class="info">
