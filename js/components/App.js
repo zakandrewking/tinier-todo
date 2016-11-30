@@ -49,6 +49,10 @@ export const App = tinier.createComponent({
     },
   },
 
+  didMount: ({ el }) => {
+    el.getElementsByClassName('new-todo')[0].focus()
+  },
+
   render: ({ el, state, methods, signals }) => {
     const mainFooterStyle = {
       display: state.todoList.todos.length > 0 ? 'block' : 'none'
@@ -62,8 +66,8 @@ export const App = tinier.createComponent({
       <section class="todoapp">
         <header class="header">
           <h1>todos</h1>
-          <input class="new-todo" placeholder="What needs to be done?" autofocus
-                 onKeyUp={ methods.inputKeyUp } />
+        <input class="new-todo" placeholder="What needs to be done?"
+               onKeyUp={ methods.inputKeyUp } />
         </header>
         <section class="main" >
           { tinier.bind('todoList') }
