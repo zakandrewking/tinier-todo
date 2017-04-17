@@ -67,7 +67,7 @@ export const TodoList = tinier.createComponent({
       return <li>{ tinier.bind([ 'todos', i ]) }</li>
     })
     const allChecked = all(state.todos.map(t => t.isCompleted))
-    return tinier.render(el,
+    return (
       <div style={ state.showHide.style }>
       <input class="toggle-all" type="checkbox"
              checked={ allChecked } onclick={ reducers.toggleAll }/>

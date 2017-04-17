@@ -46,7 +46,7 @@ export const Todo = tinier.createComponent({
     const labelStyle = { display: !state.isEditing ? 'block' : 'none' }
     const inputStyle = { display:  state.isEditing ? 'block' : 'none' }
     const focusFn = state.isEditing ? el => el.focus() : null
-    return tinier.render(el,
+    return [
       <input class="toggle" type="checkbox" checked={ state.isCompleted }
              onchange={ methods.changeCompleted } />,
       <label ondblclick={ reducers.startEditing } style={ labelStyle } >
@@ -55,7 +55,7 @@ export const Todo = tinier.createComponent({
       <input class="edit" value={ state.label } onKeyUp={ methods.inputKeyUp }
              style={ inputStyle } then={ focusFn } />,
       <div>{ tinier.bind('deleteButton') }</div>
-    )
+    ]
   }
 })
 

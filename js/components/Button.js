@@ -8,7 +8,7 @@ export const Button = tinier.createComponent({
   signalNames: [ 'buttonClick' ],
 
   render: ({ state, signals, el }) => {
-    return tinier.render(el,
+    return (
       <button onclick={ signals.buttonClick.call } class={ state.classStr }>
         { state.label }
       </button>

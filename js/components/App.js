@@ -61,8 +61,7 @@ export const App = tinier.createComponent({
     const s = left > 1 ? 's' : ''
     const showClearButton = left !== state.todoList.todos.length
 
-    return tinier.render(
-      el,
+    return [
       <section class="todoapp">
         <header class="header">
           <h1>todos</h1>
@@ -92,7 +91,7 @@ export const App = tinier.createComponent({
         <p>Created by <a href="http://github.com/zakandrewking">Zak King</a></p>
         <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
       </footer>
-    )
+    ]
   },
 })
 
