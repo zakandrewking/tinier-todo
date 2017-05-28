@@ -6,15 +6,11 @@ import Button from './Button'
 export const App = tinier.createComponent({
   displayName: 'App',
 
-  model: {
-    todoList: TodoList,
-    clearButton: Button,
-  },
-
   init: () => ({
-    todoList: TodoList.init(),
-    clearButton: Button.init({
-      classStr: 'clear-completed', label: 'Clear completed',
+    todoList: TodoList,
+    clearButton: Button({
+      classStr: 'clear-completed',
+      label: 'Clear completed',
     }),
     value: '',
   }),
@@ -39,7 +35,7 @@ export const App = tinier.createComponent({
       if (event.keyCode === 13) {
         const label = target.value.trim()
         if (label !== '') {
-          signals.addTodo.call({ label })
+          signals.addTodo.call(label)
           target.value = ''
         }
       }
